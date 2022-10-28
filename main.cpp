@@ -8,7 +8,7 @@ private:
     static int unique_id;
     std::string brand;
     std::string model;
-    int an;
+    int an{};
 public:
     Masina(const std::string& brand_, const std::string& model_, int an_) : brand{brand_}, model{model_}, an{an_} {
         std::cout << "Constr de initializare Masina\n";
