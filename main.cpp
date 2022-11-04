@@ -155,7 +155,7 @@ public:
         return -1;
     }
 
-    int getStaticId() const { return unique_id;}
+    //int getStaticId() const { return unique_id;}
 
     void citire(){
         std::cout<<"Clientul cu ID: " << id << "\nNume: ";
@@ -249,25 +249,25 @@ public:
 int main() {
 
     Masina d1{"Dacia", "Logan", 2009};
-    Masina d2{"Renault", "Zoe", 2021};
+    //Masina d2{"Renault", "Zoe", 2021};
     std::cout << d1;
-    std::cout << d2;
-    //Masina d2;
-    //d2.citire();
+    //std::cout << d2;
+    Masina d2;
+    d2.citire();
     //std::cout << d2;
     //std::cout << d2.getId() << "\n";
 
     Client c1{"Popescu", "Andrei", 720222444};
-    Client c2{"Ionescu", "Vlad", 777777777};
+    //Client c2{"Ionescu", "Vlad", 777777777};
     std::cout << c1;
-    std::cout << c2;
-
-    //c2.citire();
     //std::cout << c2;
+    Client c2;
+    c2.citire();
+    std::cout << c2;
 
     //Rezervare r1{2,1,30,10,2022};
     Rezervare r1;
-
+    std::cout<<r1;
     //std::cout << d1.getStaticId() << '\n';
     return 0;
 }
