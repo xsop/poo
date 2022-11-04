@@ -1,6 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <string>
 #include <iostream>
-#include <regex>
 #include <ctime>
 #include <fstream>
 
@@ -75,8 +75,8 @@ public:
         id = ++unique_id;
     }
 
-    int getId() const { return id;}
-    int getStaticId() const { return unique_id;}
+    //int getId() const { return id;}
+    //int getStaticId() const { return unique_id;}
 
     friend std::ostream& operator<<(std::ostream& os, const Masina& ma) {
         os << "Brand: " << ma.brand  << ", Model: " << ma.model << ", An: " << ma.an << "\n";
@@ -131,6 +131,7 @@ public:
 
     Client(){
         id = ++unique_id;
+        telefon = 0;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Client& cl) {
