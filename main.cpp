@@ -249,25 +249,10 @@ public:
 int main() {
 
     Masina d1{"Dacia", "Logan", 2009};
-    //Masina d2{"Renault", "Zoe", 2021};
     std::cout << d1;
-    //std::cout << d2;
-    Masina d2;
-    d2.citire();
-    //std::cout << d2;
-    //std::cout << d2.getId() << "\n";
-
     Client c1{"Popescu", "Andrei", 720222444};
-    //Client c2{"Ionescu", "Vlad", 777777777};
     std::cout << c1;
-    //std::cout << c2;
-    Client c2;
-    c2.citire();
-    std::cout << c2;
-
-    //Rezervare r1{2,1,30,10,2022};
-    Rezervare r1;
+    Rezervare r1{1,1,31,12,2022};
     std::cout<<r1;
-    //std::cout << d1.getStaticId() << '\n';
     return 0;
 }
