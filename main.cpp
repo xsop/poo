@@ -254,6 +254,8 @@ int main() {
     Client c1{};
     Client c2{};
     Rezervare r1{m1,c1};
+    std::cout << r1;
     Rezervare r2{m2,c2};
+    std::cout << r2;
     afisareProg();
 }
