@@ -51,19 +51,16 @@ bool validViitor(int z, int l, int y){
 class Masina {
 private:
     int id;
-    static int unique_id;
     std::string brand;
     std::string model;
     int an{};
 public:
-    Masina(const std::string& brand_, const std::string& model_, int an_) : brand{brand_}, model{model_}, an{an_} {
+    Masina(int id_, const std::string& brand_, const std::string& model_, int an_) :id{id_}, brand{brand_}, model{model_}, an{an_} {
         std::cout << "Constr de initializare Masina\n";
-        id = ++unique_id;
     }
 
-    Masina(const Masina& other) : brand{other.brand}, model{other.model}, an{other.an} {
+    Masina(const Masina& other) : id{other.id}, brand{other.brand}, model{other.model}, an{other.an} {
         std::cout << "Constr de copiere Masina\n";
-        id = ++unique_id;
     }
 
     /*
@@ -72,11 +69,10 @@ public:
     int getAn() const { return an; }
     */
     Masina(){
-        id = ++unique_id;
+        citire();
     }
 
-    //int getId() const { return id;}
-    //int getStaticId() const { return unique_id;}
+    int getId() const { return id;}
 
     friend std::ostream& operator<<(std::ostream& os, const Masina& ma) {
         os << "Brand: " << ma.brand  << ", Model: " << ma.model << ", An: " << ma.an << "\n";
@@ -89,20 +85,21 @@ public:
 
     int validAn(){
         int anul;
-        time_t current_time;
-        current_time = time(NULL);
-        int a = 1970 + current_time / 31537970;
+        std::time_t t = std::time(nullptr);
+        std::tm *const pTInfo = std::localtime(&t);
         while(1){
             std::cout<<"An: ";
             std::cin>>anul;
-            if(anul >= 1970 && anul <= a)
+            if(anul >= 1970 && anul <= 1900 + pTInfo->tm_year)
                 return anul;
         }
         return -1;
     }
 
     void citire(){
-        std::cout<<"Masina cu ID: " << id << "\nBrand: ";
+        std::cout<<"Masina cu ID: ";
+        std::cin>>id;
+        std::cout<<"Brand: ";
         std::cin>>brand;
         brand[0] = toupper(brand[0]);
         std::cout<<"Model: ";
@@ -112,26 +109,21 @@ public:
     }
 };
 
-int Masina::unique_id = 0;
-
 class Client {
 private:
     int id;
-    static int unique_id;
     std::string nume;
     std::string prenume;
     unsigned long telefon;
 
 public:
 
-    Client(const std::string& nume_, const std::string& prenume_, unsigned long telefon_) : nume{nume_}, prenume{prenume_}, telefon{telefon_}{
+    Client(int id_, const std::string& nume_, const std::string& prenume_, unsigned long telefon_) : id{id_}, nume{nume_}, prenume{prenume_}, telefon{telefon_}{
         std::cout << "Constr de initializare Client\n";
-        id = ++unique_id;
     }
 
     Client(){
-        id = ++unique_id;
-        telefon = 0;
+        citire();
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Client& cl) {
@@ -139,26 +131,23 @@ public:
         return os;
     }
 
-    int validTelefon(){
-        int tel;
+    static int validTelefon(){
+        std::string tel;
         while(1){
-            std::cout<<"Telefon(fara prefix): ";
+            std::cout<<"Telefon(07xxxxxxxx): ";
             std::cin>>tel;
-            int tel2 = tel, nr = 0;
-            while(tel2){
-                nr++;
-                tel2/=10;
+            if (tel.find_first_not_of( "0123456789" ) == std::string::npos && tel.length() == 10){
+                break;
             }
-            if (nr == 9)
-                return tel;
         }
         return -1;
     }
 
-    //int getStaticId() const { return unique_id;}
 
     void citire(){
-        std::cout<<"Clientul cu ID: " << id << "\nNume: ";
+        std::cout<<"Clientul cu ID: ";
+        std::cin>>id;
+        std::cout<<"Nume: ";
         std::cin>>nume;
         nume[0] = toupper(nume[0]);
         std::cout<<"Prenume: ";
@@ -167,37 +156,37 @@ public:
         telefon = validTelefon();
     }
 
-    //int getId() const { return id;}
+    int getId() const { return id;}
+
+
 
 };
 
-int Client::unique_id = 0;
-
 class Rezervare {
 private:
-    int idMasina;
-    int idClient;
+    Masina masina;
+    Client client;
     int zi;
     int luna;
     int an;
 public:
 
     int creeareRezervare(int idm, int idc, int z, int l, int a){
-        std::ifstream f("../rezervare.txt");
+        std::ifstream f("rezervare.txt");
         if(validData(z,l,a) && validViitor(z,l,a)) {
             std::string rezComplet = std::to_string(idm) + "," + std::to_string(idc) + "," + std::to_string(z) + "," +
                                      std::to_string(l) + "," + std::to_string(a);
             std::string line;
             while (std::getline(f, line)) {
-                std::cout << line << '\n';
                 if (rezComplet.compare(line) == 0) {
                     std::cout << "Exista deja o rezervare\n";
+                    f.close();
                     return -1;
                 }
             }
             f.close();
 
-            std::ofstream g("../rezervare.txt", std::ios_base::app);
+            std::ofstream g("rezervare.txt", std::ios_base::app);
             g.seekp(0, std::ios_base::end);
             int length = g.tellp();
             g.seekp(length, std::ios_base::beg);
@@ -211,10 +200,6 @@ public:
     }
 
     void citire(){
-        std::cout<<"ID Masina: ";
-        std::cin>>idMasina;
-        std::cout<<"ID Client: ";
-        std::cin>>idClient;
         while(1) {
             std::cout << "zi: ";
             std::cin >> zi;
@@ -227,32 +212,48 @@ public:
         }
     }
 
-    Rezervare(int idMasina_, int idClient_, int zi_, int luna_, int an_) : idMasina{idMasina_}, idClient{idClient_}, zi{zi_}, luna{luna_}, an{an_}{
-        std::cout << "Constr de initializare Rezervare\n";
-        if(creeareRezervare(idMasina, idClient, zi, luna, an) == -1){
-            delete this;
-        }
+    Rezervare(const Masina& masina_, const Client& client_, int zi_, int luna_, int an_) : masina{masina_}, client{client_},  zi{zi_}, luna{luna_}, an{an_}{
+        creeareRezervare(masina.getId(), client.getId(), zi_, luna_, an_);
     }
 
-    Rezervare(){
+    Rezervare(const Masina& masina_, const Client& client_): masina{masina_}, client{client_}{
         citire();
-        creeareRezervare(idMasina, idClient, zi, luna, an);
+        creeareRezervare(masina.getId(), client.getId(), zi, luna, an);
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Rezervare& re) {
-        os << "ID Masina " << re.idMasina << ", ID Client " << re.idClient << ", Data " << re.zi << "/" << re.luna <<"/" << re.an <<"\n";
+        os << "ID Masina " << re.masina.getId() << ", ID Client " << re.client.getId() << ", Data " << re.zi << "/" << re.luna <<"/" << re.an <<"\n";
         return os;
     }
 
 };
 
+void afisareProg(){
+    std::string line;
+    std::ifstream f("rezervare.txt");
+    while(!f.eof()){
+        getline(f,line);
+        std::cout << "" << line << "\n" ;
+    }
+    f.close();
+}
+
 int main() {
 
-    Masina d1{"Dacia", "Logan", 2009};
-    std::cout << d1;
-    Client c1{"Popescu", "Andrei", 720222444};
-    std::cout << c1;
-    Rezervare r1{1,1,31,12,2022};
-    std::cout<<r1;
-    return 0;
+    /*Masina d1{1,"Dacia", "Logan", 2009};
+    Masina d2{2,"Dacia", "Logan", 2009};
+    Masina d3{3,"Dacia", "Logan", 2009};
+    Client c1{1,"Popescu", "Andrei", 720222444};
+    Rezervare r1{d3,c1,31,12,2022};
+    Rezervare r2{d3,c1,29,11,2052};
+    afisareProg();
+    return 0;*/
+
+    Masina m1{};
+    Masina m2{};
+    Client c1{};
+    Client c2{};
+    Rezervare r1{m1,c1};
+    Rezervare r2{m2,c2};
+    afisareProg();
 }
