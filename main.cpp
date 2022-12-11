@@ -1,8 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <string>
+#include <stdio.h>
 #include <iostream>
 #include <ctime>
 #include <fstream>
+#include <cstring>
 
 bool bisect(int an){
     return (((an % 4 == 0) && (an % 100 != 0)) || (an % 400 == 0));
@@ -63,13 +65,16 @@ public:
         std::cout << "Constr de copiere Masina\n";
     }
 
-    /*
-    const std::string& getBrand() const { return brand; }
-    const std::string& getModel() const { return model; }
-    int getAn() const { return an; }
-    */
     Masina(){
         citire();
+    }
+
+    Masina& operator=(const Masina& other){
+        id = other.id;
+        brand = other.brand;
+        model = other.model;
+        an = other.an;
+        return *this;
     }
 
     int getId() const { return id;}
@@ -171,6 +176,26 @@ private:
     int an;
 public:
 
+    int getMasina() const{
+        return this->masina.getId();
+    }
+
+    int getClient() const{
+        return this->client.getId();
+    }
+
+    int getZi() const{
+        return zi;
+    }
+
+    int getLuna() const{
+        return luna;
+    }
+
+    int getAn() const{
+        return an;
+    }
+
     int creeareRezervare(int idm, int idc, int z, int l, int a){
         std::ifstream f("rezervare.txt");
         if(validData(z,l,a) && validViitor(z,l,a)) {
@@ -212,6 +237,24 @@ public:
         }
     }
 
+    void anulare(){
+        std::string rezComplet = std::to_string(getMasina()) + "," + std::to_string(getClient()) + "," + std::to_string(getZi()) + "," +
+                                 std::to_string(getLuna()) + "," + std::to_string(getAn());
+
+        std::string line;
+        std::ifstream f("rezervare.txt");
+        std::ofstream temp("temp.txt");
+        while (getline(f,line))
+        {
+            if (line != rezComplet && line.size()!=0)
+                temp << line << std::endl;
+        }
+        f.close();
+        temp.close();
+        remove("rezervare.txt");
+        rename("temp.txt","rezervare.txt");
+    }
+
     Rezervare(const Masina& masina_, const Client& client_, int zi_, int luna_, int an_) : masina{masina_}, client{client_},  zi{zi_}, luna{luna_}, an{an_}{
         creeareRezervare(masina.getId(), client.getId(), zi_, luna_, an_);
     }
@@ -229,33 +272,30 @@ public:
 };
 
 void afisareProg(){
-    std::string line;
     std::ifstream f("rezervare.txt");
-    while(!f.eof()){
-        getline(f,line);
+    for (std::string line; std::getline(f, line); ) {
         std::cout << "" << line << "\n" ;
     }
     f.close();
 }
 
 int main() {
-
-    /*Masina d1{1,"Dacia", "Logan", 2009};
-    Masina d2{2,"Dacia", "Logan", 2009};
-    Masina d3{3,"Dacia", "Logan", 2009};
-    Client c1{1,"Popescu", "Andrei", 720222444};
-    Rezervare r1{d3,c1,31,12,2022};
-    Rezervare r2{d3,c1,29,11,2052};
-    afisareProg();
-    return 0;*/
-
     Masina m1{};
     Masina m2{};
     Client c1{};
     Client c2{};
+    Masina m3 = m2;
+    Masina m4 = m2;
     Rezervare r1{m1,c1};
-    std::cout << r1;
     Rezervare r2{m2,c2};
-    std::cout << r2;
     afisareProg();
+    std::cout<<'\n';
+
+    Rezervare r3{m4,c2,20,10,2023};
+    Rezervare r4{m3,c1,24,9,2023};
+    afisareProg();
+    std::cout<<'\n';
+    r3.anulare();
+    afisareProg();
+    std::cout << r1 << r2 << r3 << r4;
 }
