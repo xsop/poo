@@ -17,7 +17,7 @@ int main() {
                 MasinaFamilie{2022, 2000, 3, "Dacia", "Duster", 75, 5}.clone(),
         }};
         Client c2{2, 29, "gheorghe", "alexandru", 4076325938, {
-                MasinaSport{2016, 64000, 1, "Skoda", "Sperb", 2.0, 220}.clone(),
+                MasinaSport{2016, 64000, 1, "Skoda", "Superb", 2.0, 220}.clone(),
                 MasinaSport{2020, 32000, 2, "Volswagen", "Golf GTI", 2.0, 220}.clone(),
                 MasinaSport{2018, 78000, 3, "Volswagen", "Touareg", 3.0, 250}.clone(),
                 MasinaFamilie{2013, 145000, 4, "Toyota", "Corolla", 50, 4}.clone()
