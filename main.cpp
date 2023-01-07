@@ -22,7 +22,7 @@ int main() {
                 MasinaSport{2018, 78000, 3, "Volswagen", "Touareg", 3.0, 250}.clone(),
                 MasinaFamilie{2013, 145000, 4, "Toyota", "Corolla", 50, 4}.clone()
         }};
-        Client c3{3, 17, "robert", "vlad", 076157335, {
+        Client c3{3, 26, "robert", "vlad", 076157335, {
                 MasinaSport{2015, 99000, 1, "Audi", "Q7", 3.0, 270}.clone(),
                 MasinaSport{2021, 10000, 2, "Renault", "Laguna", 2.0, 200}.clone(),
                 MasinaFamilie{2017, 41000, 3, "Ford", "Ranger", 400, 6}.clone(),
